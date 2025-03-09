@@ -1,0 +1,4 @@
+.env
+data_collecting/chroma_db/*
+data_collecting/backup.pkl
+data_collecting/backup_tokens.pkl
