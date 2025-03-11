@@ -1,4 +1,9 @@
 .env
 data_collecting/chroma_db/*
+data_collecting/documents.db
 data_collecting/backup.pkl
 data_collecting/backup_tokens.pkl
+
+rag_implementation/bm25_per_python_version.pkl
+rag_implementation/speed_test.pkl
+rag_implementation/documents.db
