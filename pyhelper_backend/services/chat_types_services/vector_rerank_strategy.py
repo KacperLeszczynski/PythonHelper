@@ -22,14 +22,14 @@ class VectorRerankStrategy(ChatStrategy):
 
         return results["documents"][0] if "documents" in results and results["documents"] else []
 
-    def generate_response(self, query, retrieved_docs, memory, python_version):
+    def generate_response(self, query, retrieved_docs, memory, python_version, chat_model):
         reranked_docs = self.reranker_service.rerank_results(query, retrieved_docs)
         context = "\n\n".join(reranked_docs)
         prompt = self.memory.get_prompt(query, context, python_version)
 
         response = self.openai_service.generate(
             messages=self.get_messages(prompt),
-            model=self.CHAT_MODEL,
+            model=chat_model,
             temperature=self.CHAT_TEMPERATURE
         )
 

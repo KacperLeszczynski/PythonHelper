@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from openai.types.chat import ChatCompletion
 import tiktoken
 
+from models.chat_model_type_enum import ChatModelTypeEnum
 
 load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -11,14 +12,14 @@ tokenizer = tiktoken.encoding_for_model("text-embedding-ada-002")
 
 
 class OpenAIService:
-    def generate(self, messages, model: str, temperature: float) -> ChatCompletion:
+    def generate(self, messages, model: ChatModelTypeEnum, temperature: float) -> str | None:
         response = openai.chat.completions.create(
-            model=model,
+            model=model.value,
             temperature=temperature,
             messages=messages
         )
 
-        return response
+        return response.choices[0].message.content
 
     def get_openai_embedding(self, text):
         response = openai.embeddings.create(

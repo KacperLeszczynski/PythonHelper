@@ -7,3 +7,10 @@ data_collecting/backup_tokens.pkl
 rag_implementation/bm25_per_python_version.pkl
 rag_implementation/speed_test.pkl
 rag_implementation/documents.db
+
+pyhelper_backend/models/__pycache__/*
+pyhelper_backend/__pycache/*
+pyhelper_backend/services/__pycache__/*
+pyhelper_backend/routers/__pycache__/*
+
+pyhelper_backend/.idea/*
