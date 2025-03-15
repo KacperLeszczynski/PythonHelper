@@ -1,11 +1,14 @@
 from abc import ABC, abstractmethod
 
+import tiktoken
+
 from services.summary_buffer_memory import SummaryBufferMemory
 
 
 class ChatStrategy(ABC):
     CHAT_MODEL = "gpt-4o-mini"
     CHAT_TEMPERATURE = 0.3
+    TOKENIZER = tiktoken.encoding_for_model("text-embedding-ada-002")
 
     @abstractmethod
     def retrieve_documents(self, query, python_version, top_k=7):

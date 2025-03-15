@@ -1,10 +1,12 @@
 import chromadb
 from dotenv import load_dotenv
+import os
 
 from services.openai_service import OpenAIService, get_openai_service
 
 load_dotenv()
-CHROMA_DB_PATH = "./../../data_collecting/chroma_db"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+CHROMA_DB_PATH = os.path.normpath(os.path.join(BASE_DIR, "../../data_collecting/chroma_db"))
 
 
 class ChromaService:
@@ -22,7 +24,9 @@ class ChromaService:
             where={"version": python_version}
         )
 
+
 chroma_service = ChromaService(openai_service=get_openai_service())
+
 
 def get_chroma_service() -> ChromaService:
     return chroma_service
