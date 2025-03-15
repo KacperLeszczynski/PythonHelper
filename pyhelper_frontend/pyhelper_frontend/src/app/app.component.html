@@ -1,0 +1,59 @@
+<div class="app-container">
+  <div class="conversation-history">
+    <ng-container *ngIf="messages.length > 0; else noMessages">
+      <mat-list>
+        <mat-list-item *ngFor="let msg of messages">
+          <mat-card [ngClass]="msg.fromUser ? 'user-message' : 'bot-message'">
+            <markdown [data]="msg.text"></markdown>
+          </mat-card>
+        </mat-list-item>
+      </mat-list>
+    </ng-container>
+    <ng-template #noMessages>
+      <p class="empty-chat">No messages</p>
+    </ng-template>
+  </div>
+
+  <div class="input-container">
+    <mat-form-field class="dropdown-field-python">
+      <mat-label>Python</mat-label>
+      <mat-select [(ngModel)]="pythonOption">
+        <mat-option
+          *ngFor="let option of pythonVersionOptions"
+          [value]="option"
+        >
+          {{ option }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="dropdown-field">
+      <mat-label>RAG options</mat-label>
+      <mat-select [(ngModel)]="selectedStrategyOption">
+        <mat-option *ngFor="let option of strategiesOptions" [value]="option">
+          {{ option.value }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="dropdown-field">
+      <mat-label>Chat model</mat-label>
+      <mat-select [(ngModel)]="selectedTypeOption">
+        <mat-option *ngFor="let option of modelTypeOptions" [value]="option">
+          {{ option.value }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="input-field">
+      <mat-label>Enter prompt</mat-label>
+      <input matInput [(ngModel)]="message" (keyup.enter)="sendMessage()" />
+    </mat-form-field>
+    <button
+      class="send-button"
+      mat-raised-button
+      color="primary"
+      (click)="sendMessage()"
+    >
+      <mat-icon>send</mat-icon>
+    </button>
+  </div>
+</div>
