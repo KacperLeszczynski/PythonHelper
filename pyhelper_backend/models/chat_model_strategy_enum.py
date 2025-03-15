@@ -1,7 +1,10 @@
 from enum import Enum
 
 from services.chat_types_services.chat_strategy import ChatStrategy
-from services.chat_types_services.vector_strategy import VectorStrategy, get_vector_strategy
+from services.chat_types_services.vector_bm25_rerank_strategy import get_vector_bm25_rerank_strategy
+from services.chat_types_services.vector_bm25_strategy import get_vector_bm25_strategy
+from services.chat_types_services.vector_rerank_strategy import get_vector_rerank_strategy
+from services.chat_types_services.vector_strategy import get_vector_strategy
 
 
 class ChatModelStrategyEnum(Enum):
@@ -17,5 +20,11 @@ class StrategyFactory:
         match strategy_enum:
             case ChatModelStrategyEnum.VECTOR:
                 return get_vector_strategy()
+            case ChatModelStrategyEnum.VECTOR_RERANK:
+                return get_vector_rerank_strategy()
+            case ChatModelStrategyEnum.VECTOR_BM25_RERANK:
+                return get_vector_bm25_rerank_strategy()
+            case ChatModelStrategyEnum.VECTOR_BM25:
+                return get_vector_bm25_strategy()
             case _:
                 raise ValueError(f"Unsupported strategy: {strategy_enum}")

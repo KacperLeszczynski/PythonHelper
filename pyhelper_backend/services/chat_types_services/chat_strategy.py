@@ -1,18 +1,27 @@
 from abc import ABC, abstractmethod
 
+import tiktoken
+
+from models.chat_model_type_enum import ChatModelTypeEnum
 from services.summary_buffer_memory import SummaryBufferMemory
 
 
 class ChatStrategy(ABC):
     CHAT_MODEL = "gpt-4o-mini"
     CHAT_TEMPERATURE = 0.3
+    TOKENIZER = tiktoken.encoding_for_model("text-embedding-ada-002")
 
     @abstractmethod
     def retrieve_documents(self, query, python_version, top_k=7):
         pass
 
     @abstractmethod
-    def generate_response(self, query: str, retrieved_docs: list, memory: SummaryBufferMemory, python_version: str):
+    def generate_response(self,
+                          query: str,
+                          retrieved_docs: list,
+                          memory: SummaryBufferMemory,
+                          python_version: str,
+                          chat_model: ChatModelTypeEnum):
         pass
 
     def get_messages(self, prompt: str) -> list:

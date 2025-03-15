@@ -4,7 +4,7 @@ from services.openai_service import OpenAIService, get_openai_service
 
 
 class SummaryBufferMemory:
-    def __init__(self, openai_service: OpenAIService, tokenizer, max_tokens=3500, window_size=5, model="gpt4o-mini"):
+    def __init__(self, openai_service: OpenAIService, tokenizer, max_tokens=3500, window_size=5, model="gpt-4o-mini"):
         self.history = []
         self.openai_service = openai_service
         self.tokenizer = tokenizer
