@@ -18,7 +18,7 @@ class VectorRerankStrategy(ChatStrategy):
         self.reranker_service = reranker_service
 
     def retrieve_documents(self, query, python_version, top_k=7):
-        results = self.chroma_service.query(query, python_version, top_k)
+        results = self.chroma_service.query(query, python_version, top_k * 2)
 
         return results["documents"][0] if "documents" in results and results["documents"] else []
 
