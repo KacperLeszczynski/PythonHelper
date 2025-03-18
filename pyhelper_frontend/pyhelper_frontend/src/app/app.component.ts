@@ -1,8 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ElementRef, ViewChild } from '@angular/core';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
+import { MatButton, MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatCardModule } from '@angular/material/card';
@@ -38,6 +38,9 @@ import { HttpClientModule } from '@angular/common/http';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
+  @ViewChild("promptInput") promptInput!: ElementRef<HTMLInputElement>
+  @ViewChild('sendButton', { read: MatButton }) sendButton!: MatButton; 
+
   message: string = '';
   messages: { text: string; fromUser: boolean }[] = [];
   strategiesOptions = [
@@ -62,20 +65,26 @@ export class AppComponent {
   chatService = inject(ChatService)
 
   sendMessage() {
-    console.log(this.message)
     if (!this.message.trim()) return;
 
     this.messages.push({ text: this.message, fromUser: true });
+    this.promptInput.nativeElement.disabled = true
+    this.sendButton.disabled = true
+    this.messages.push({ text: "(Retrieving response from server)", fromUser: false });
 
     this.chatService
       .getResponse(
         this.message, 
         this.pythonOption, 
-        7, 
+        10, 
         this.selectedStrategyOption.type, 
         this.selectedTypeOption.type)
       .subscribe(response => {
+        this.messages.pop()
         this.messages.push({ text: response.response, fromUser: false });
+        this.promptInput.nativeElement.disabled = false
+        this.sendButton.disabled = false
+        
       }
     )
 

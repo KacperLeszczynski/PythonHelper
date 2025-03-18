@@ -1,10 +1,11 @@
 import tiktoken
 
+from models.chat_model_type_enum import ChatModelTypeEnum
 from services.openai_service import OpenAIService, get_openai_service
 
 
 class SummaryBufferMemory:
-    def __init__(self, openai_service: OpenAIService, tokenizer, max_tokens=3500, window_size=5, model="gpt-4o-mini"):
+    def __init__(self, openai_service: OpenAIService, tokenizer, max_tokens=1000, window_size=5, model=ChatModelTypeEnum.GPT_4O_MINI):
         self.history = []
         self.openai_service = openai_service
         self.tokenizer = tokenizer
@@ -20,11 +21,12 @@ class SummaryBufferMemory:
 
     def get_token_count(self):
         text = " ".join([f"{h['user']} {h['assistant']}" for h in self.history])
-        return len(self.tokenizer.encode(text))
+        encoded_text = self.tokenizer.encode(text)
+        return len(encoded_text)
 
     def summarize_history(self):
         conversation_text = "\n".join(
-            f"User: {h['user']}\nAssistant: {h['assistant']}" for h in self.history[:-self.window_size]
+            f"User: {h['user']}\nAssistant: {h['assistant']}" for h in self.history
         )
 
         summarization_prompt = f"""
@@ -41,8 +43,7 @@ class SummaryBufferMemory:
 
         messages = [{"role": "user", "content": summarization_prompt}]
         response = self.openai_service.generate(messages=messages, model=self.model, temperature=0.3)
-
-        self.summary = response.choices[0].message.content
+        self.summary = response
 
         self.history = self.history[-self.window_size:]
 
@@ -55,6 +56,7 @@ class SummaryBufferMemory:
         {python_version}
 
         ** Instructions **
+        - If you can answer question based on the context do it
         - If user asks you to generate code and by using context you cannot do it, then generate it on your own
         - If user doesn't ask to generate code and the context does not contain answer for query answer based on your knowledge.
         - If the user's question does not specify Python, rephrase it internally as a Python-related question before answering.
@@ -71,8 +73,7 @@ class SummaryBufferMemory:
 
         """
 
-        prompt = prompt_model.format(context=context, query=query, python_version=python_version,
-                                     summary=self.summary)
+        prompt = prompt_model.format(context=context, python_version=python_version, summary=self.summary)
 
         for msg in self.history:
             prompt += f"User: {msg['user']}\nAssistant: {msg['assistant']}\n"
